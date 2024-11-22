@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 80%;
+            margin: 10px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid grey;
+            padding: 5px 10px;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-top: 5px;
+        }
+
+        table tr td{
+            text-align: center;
+        }
+
+        form label {
+            /* display: block; */
+            display: inline-block;
+            width: 250px;
+            text-align: right;
+        }
+
+        .my-3 {
+            margin: 15px 0;
+        }
+
+        .mt-3{
+            margin-top: 20px;
+        }
+
+        input{
+            height: 24px;
+            width: 300px;
+        }
+
+        button {
+            display: block;
+            width: 25%;
+            margin: auto;
+            padding: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Employee Form</h1>
+        <span id="error"></span>
+        <form action="#">
+            <div class="my-3">
+                <label for="empId">Enter Employee Id : </label>
+                <input type="number" name="empId" id="empId">
+            </div>
+            <div class="my-3">
+                <label for="empName">Enter Employee Name : </label>
+                <input type="text" name="empName" id="empName">
+            </div>
+            <div class="my-3">
+                <label for="empDOJ">Enter Employee's Date of Joining : </label>
+                <input type="text" name="empDOJ" id="empDOJ">
+            </div>
+            <div class="my-3">
+                <label for="empSalary">Enter Employee Salary : </label>
+                <input type="number" name="empSalary" id="empSalary">
+            </div>
+            <button type="button" id="submit">Submit</button>
+        </form>
+        <h1 class="mt-3">Employee details</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Employee Name</th>
+                        <th>Date of Join</th>
+                        <th>Salary</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+
+                </tbody>
+            </table>
+    </div>
+    <script>
+        class Person {
+            // name;
+            constructor(name) {
+                this.name = name;
+            }
+            getName() {
+                return this.name;
+            }
+            setName(name) {
+                this.name = name;
+            }
+            display() {
+                console.log(this.name);
+            }
+        }
+
+        class Employee extends Person {
+            id;
+            doj;
+            salary;
+            constructor(name) {
+                super(name);
+                // this.id = id;
+                // this.doj = doj;
+                // this.salary = salary;
+            }
+            setId(id) {
+                this.id = id;
+            }
+            getId() {
+                return this.id;
+            }
+            setDOJ(doj) {
+                this.doj = doj;
+            }
+            getDOJ() {
+                return this.doj;
+            }
+            setSalary(salary) {
+                this.salary = salary;
+            }
+            getSalary() {
+                return this.salary;
+            }
+            display() {
+                super.display();
+                // return "Called display method from parent class";
+            }
+        }
+
+        document.getElementById("submit").addEventListener("click", function (e) {
+            e.preventDefault();
+            // console.log("Entered");
+            let id = document.getElementById("empId").value;
+            console.log(id);
+            let name = document.getElementById("empName").value;
+            let doj = document.getElementById("empDOJ").value;
+            let salary = document.getElementById("empSalary").value;
+            let length = localStorage.length;
+            let txt = "";
+            let text = "";
+
+            let employee = new Employee(name);
+            employee.setId(Number.parseInt(id));
+            employee.setDOJ(doj);
+            employee.setSalary(Number.parseInt(salary));
+            // console.log(employee);
+
+            if(id == "" || name == "" || doj == "" || salary == ""){
+                document.getElementById("error").innerHTML = "Fields cannot be empty";
+            }
+            else{
+                document.getElementById("error").innerHTML = "";
+                if (length == 0) {
+                    localStorage.setItem(localStorage.length, JSON.stringify(employee));
+                }
+                else {
+                    localStorage.setItem(localStorage.length, JSON.stringify(employee));
+                }
+            }
+
+            let i = 0;
+            length = localStorage.length;
+            let tbody = document.getElementById("tbody");
+            if(length == 0){
+                tbody.innerHTML = `<tr><td colspan="4">No Data </td></tr>`;
+            }
+            else{
+                while (i < length) {
+                    txt = JSON.parse(localStorage.getItem(i));
+                    text += `<tr>
+                        <td>${txt.id}</td>
+                        <td>${txt.name}</td>
+                        <td>${txt.doj}</td>
+                        <td>${txt.salary}</td>
+                        </tr>`;
+                        i++;
+                    }
+                    tbody.innerHTML = text;
+                    document.getElementsByTagName("form")[0].reset();
+                }
+        })
+    </script>
+</body>
+
+</html>
